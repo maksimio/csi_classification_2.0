@@ -1,5 +1,4 @@
 from __future__ import annotations
-from ..watcher import Watcher as W
 from ..log.logcombiner import LogCombiner
 import pandas as pd
 import numpy as np
@@ -11,33 +10,26 @@ class WifiDf(LogCombiner):
     def __init__(self, dirpath: list = None, categories: list = None) -> None:
         pathes = LogCombiner.subdirs(dirpath)
         LogCombiner.__init__(self, pathes, categories)
-        self.__w = W()
         self.combine()
 
         self.__make_df_raw()
-        self.__w.hprint(self.__w.INFO, 'WifiDf: {} to df in ' + str(round(self.time[-1]['duration'], 2)) + ' seconds')
 
         self.__filter()
-        self.__w.hprint(self.__w.INFO, 'WifiDf: filter df_raw and remove ' + str(self.df_raw.shape[0] - self.df.shape[0]) + ' packets')
 
         self.restore_csi()
-        self.__w.hprint(self.__w.INFO, 'WifiDf: get complex CSI dfs in ' + str(round(self.time[-1]['duration'], 2)) + ' seconds')
 
         self.__num_tones = int(self.df['num_tones'].mean())
         self.__type = 'complex'
 
         pd.options.mode.chained_assignment = None
 
-    @W.stopwatch
     def __make_df_raw(self) -> None:
         self.df_raw = pd.DataFrame(self.raw)
 
-    @W.stopwatch
     def __filter(self) -> None:
         df = self.df_raw
         self.df = df[(df['csi_len'] != 0) & (df['payload_len'] > 300)].reset_index(drop=True)
 
-    @W.stopwatch
     def restore_csi(self) -> WifiDf:
         # TODO отлавливать ошибку IndexError: tuple index out of range и выводить ее
         csi = np.array(self.df['csi'].to_list())
@@ -73,10 +65,8 @@ class WifiDf(LogCombiner):
     def set_type(self, active_type: str):
         if active_type == 'complex' or active_type == 'abs' or active_type == 'phase':
             self.__type = active_type
-            self.__w.hprint(self.__w.SUCCESS,'WifiDf: change type to ' + active_type)
             return self
         else:
-            self.__w.hprint(self.__w.FAIL, 'WifiDf: wrong active type in set_type! Exit...')
             exit()
 
 
@@ -94,11 +84,9 @@ class WifiDf(LogCombiner):
 
 
     @__relist
-    @W.stopwatch
     def smooth(self, width: int = 5, win: str = None):
         '''https://docs.scipy.org/doc/scipy/reference/signal.windows.html#module-scipy.signal.windows'''
         if self.__type == 'complex':
-            self.__w.hprint(self.__w.FAIL, 'WifiDf: in smooth active type can`t be complex! Exit...')
             exit()
 
         for i in range(len(self.__df_csi_lst)):
@@ -106,10 +94,8 @@ class WifiDf(LogCombiner):
 
 
     @__relist
-    @W.stopwatch
     def unjump(self) -> WifiDf:
         if self.__type != 'phase':
-            self.__w.hprint(self.__w.FAIL, 'WifiDf: in unjump active type should be phase! Exit...')
             exit()
 
         for i in range(len(self.__df_csi_lst)):
@@ -123,7 +109,6 @@ class WifiDf(LogCombiner):
         return self
 
     @__relist
-    @W.stopwatch
     def diff(self, order: int = 1):
         for _ in range(order):
             for i in range(len(self.__df_csi_lst)):
@@ -131,7 +116,6 @@ class WifiDf(LogCombiner):
 
 
     @__relist
-    @W.stopwatch
     def cumsum(self, order: int = 1):
         for _ in range(order):
             for i in range(len(self.__df_csi_lst)):
@@ -139,14 +123,12 @@ class WifiDf(LogCombiner):
 
 
     @__relist
-    @W.stopwatch
     def scale(self, value: int = 1):
         for i in range(len(self.__df_csi_lst)):
             self.__df_csi_lst[i] = self.__df_csi_lst[i] * value
 
 
     @__relist
-    @W.stopwatch
     def shift(self, to):
         pass
 

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from matplotlib.pyplot import fill_between
-from ..watcher import Watcher as W
 import pandas as pd
 import numpy as np
 import scipy
@@ -40,13 +39,10 @@ class WifiLearn:
         self.x_test = x_test
         self.y_test = y_test
         self.lens = { 'train': x_train.shape[0], 'test': x_test.shape[0] }
-        self.__w = W()
         self.results = []
         self.__to_categorical()
-        self.__w.hprint(self.__w.INFO, 'WifiLearn: create with ' + str(self.lens['train']) + ' train and ' + str(self.lens['test']) + ' test packets')
 
 
-    @W.stopwatch
     def __to_categorical(self):
         self.types = sorted(self.y_train.unique())
         i = 0
@@ -85,7 +81,6 @@ class WifiLearn:
 
     
     def fit_classic(self) -> WifiLearn:
-        self.__w.hprint(self.__w.INFO, 'WifiLearn: start fit_classic')
         classifiers = {  # You can add your clfs or change params here:
             'RidgeClassifier':                  RidgeClassifier(class_weight='balanced'),
             'QuadraticDiscriminantAnalysis':    QuadraticDiscriminantAnalysis(),
@@ -114,16 +109,13 @@ class WifiLearn:
             start_fit = time()
             classifiers[clf].fit(self.x_train, self.y_train)
             res.append({'name': clf, 'accuracy': round(classifiers[clf].score(self.x_test, self.y_test) * 100, 2),'duration': round(time() - start_fit, 2)})
-            self.__w.hprint(self.__w.BOLD, 'WifiLearn: fit ' + clf + ': ' + str(res[-1]['accuracy']))
 
         self.results += res
 
         return self
 
 
-    @W.stopwatch
     def fit_classic_sum(self) -> WifiLearn:
-        self.__w.hprint(self.__w.INFO, 'WifiLearn: start fit_classic')
         classifiers = {  # You can add your clfs or change params here:
             # 'RidgeClassifier':                  RidgeClassifier(class_weight='balanced'),
             'QuadraticDiscriminantAnalysis':    QuadraticDiscriminantAnalysis(),
@@ -163,9 +155,7 @@ class WifiLearn:
         return self
 
 
-    @W.stopwatch
     def fit_cnn(self, batch_size: int=50, epochs: int=50) -> WifiLearn:
-        self.__w.hprint(self.__w.INFO, 'WifiLearn: start fit_cnn')
         self.x_train = np.reshape(self.x_train.to_numpy(), (-1, 4, 56, 1)) / 1 # 400
         self.x_test = np.reshape(self.x_test.to_numpy(), (-1, 4, 56, 1)) / 1
 
