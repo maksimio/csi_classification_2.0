@@ -2,4 +2,4 @@ __pycache__/
 */__pycache__/
 results/*
 *.csv
-csi/
+csi_data/
