@@ -11,3 +11,5 @@ for i in range(1):
 
 print('time:', time() - start)
 print(len(r.raw))
+
+# Моя читала 7.62, csiread читала 0.44, то есть в 17 раз быстрее

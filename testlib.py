@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 
 print('hi')
 # Atheros CSI Tool
-csifile = "./csi_data/homelocation/r_oomk_itchent_oilet/test/kitchen.dat"
+csifile = "./csi_data/homelocation/r_oomk_itchent_oilet/train/room.dat"
 csidata = csiread.Atheros(csifile, nrxnum=2, ntxnum=5, tones=56, if_report=False)
 
 start = time()
