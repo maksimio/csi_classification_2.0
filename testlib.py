@@ -20,6 +20,9 @@ for path in filepathes:
   data.read(endian='big')
   csidata.append(data)
 
+
+
+
 print(time() - start)
 sleep(30)
 exit()
