@@ -2,13 +2,13 @@ import numpy as np
 import csiread
 
 # Преобразование к виду 56 x 4 - амплитуды или фазы
-def reshape56x4(csi: np.ndarray) -> np.ndarray:
+def reshape4x56(csi: np.ndarray) -> np.ndarray:
   csi =  np.reshape(csi, (csi.shape[0], csi.shape[1], -1))
   return np.transpose(csi, (0, 2, 1))
 
 # Преобразование к виду 224 x 1 - амплитуды или фазы
 def reshape224x1(csi: np.ndarray) -> np.ndarray:
-  csi = reshape56x4(csi)
+  csi = reshape4x56(csi)
   return np.reshape(csi, (csi.shape[0], -1))
 
 # Нарезка по первой размерности по заданному чанку (по умолчанию - квадрат).
@@ -21,5 +21,9 @@ def extractAm(csi: np.ndarray) -> np.ndarray:
   return np.abs(csi)
 
 def extractPh(csi: np.ndarray) -> np.ndarray:
-  ph = np.unwrap(np.angle(csi), axis=1)
-  return csiread.utils.calib(ph, k=csiread.utils.scidx(20, 1), axis=1)
+  axis = np.argwhere(np.array(csi.shape) == 56)[0][0]
+  ph = np.unwrap(np.angle(csi), axis=axis)
+  return csiread.utils.calib(ph, k=csiread.utils.scidx(20, 1), axis=axis)
+
+def down(csi: np.ndarray) -> np.ndarray:
+  return csi - csi.min()

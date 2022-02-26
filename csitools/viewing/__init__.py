@@ -1,5 +1,7 @@
-def imshow():
-  pass
+import numpy as np
+import cv2
 
-def imsave(fpath: str):
-  pass
+def imsave(fpath: str, csi: np.ndarray, maxHeight=500) -> None:
+  csi = csi[:maxHeight]
+  csi =  csi / csi.max() * 255
+  cv2.imwrite(fpath, csi)
