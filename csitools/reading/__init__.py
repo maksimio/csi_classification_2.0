@@ -32,8 +32,8 @@ def matchCategories(categories: List[str], csiList: Dict):
 
 
 def match(categories: List[str], fname) -> str:
-    for cat in categories:
+    for i, cat in enumerate(categories):
       if search('.*' + cat + '.*', fname):
-        return cat
+        return i
 
-    return 'unknown'
+    return -1
