@@ -24,10 +24,9 @@ for path in filepathes:
 
 
 print(time() - start)
-sleep(30)
-exit()
-print(csidata.csi.shape)
-csi = csidata.csi[:100]
+
+print(csidata[0].csi.shape)
+csi = csidata[0].csi[:100]
 phase0 = utils.np.unwrap(utils.np.angle(csi), axis=1)
 phase = utils.calib(phase0, k=utils.scidx(20, 1), axis=1)
 phaseTest = utils.np.angle(csi)
@@ -35,6 +34,7 @@ phaseTest = utils.np.angle(csi)
 for i in [9, 18, 29]:
   plt.plot(phase0[i][:, 1, 1])
   plt.plot(phase[i][:, 1, 1])
+  plt.plot(phaseTest[i][:, 1, 1])
   plt.grid()
   print(i, phase0[i][:, 1, 1], phaseTest[i][:, 1, 1])
   plt.show()
