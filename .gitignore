@@ -7,3 +7,5 @@ csi_data/
 *.jpg
 env/
 .python-version
+data/
+*.pth
