@@ -5,3 +5,5 @@ results/*
 csi_data/
 *.jpeg
 *.jpg
+env/
+.python-version

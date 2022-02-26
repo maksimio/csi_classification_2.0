@@ -2,6 +2,7 @@ import csiread
 import numpy as np
 import csitools
 import cv2
+import torch
 
 # Чтение csi
 path = './csi_data/homelocation/r_oomk_itchent_oilet/train/kitchen.dat'
@@ -13,12 +14,10 @@ ampl = np.unwrap(np.angle(csi), axis=1)
 ampl = csiread.utils.calib(ampl, k=csiread.utils.scidx(20, 1), axis=1)
 # ampl = np.abs(csi)
 
-
 ampl = np.reshape(ampl, (ampl.shape[0], ampl.shape[1], -1))
 ampl = np.transpose(ampl, (0, 2, 1))
 ampl = np.diff(ampl)
 ampl = np.reshape(ampl, (ampl.shape[0], -1))
-
 
 print(ampl.max(), ampl.min())
 ampl = ampl[:30000]
