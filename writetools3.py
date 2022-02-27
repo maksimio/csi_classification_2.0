@@ -9,7 +9,7 @@ import numpy as np
 import torch
 
 categories = ['air', 'bottle']
-dirpath = './csi_data/use_in_paper/2_objects/train'
+dirpath = './csi_data/use_in_paper/2_objects/test'
 frameHeight = 50
 y = None
 x = None
@@ -47,37 +47,23 @@ print(y.shape, x.shape)
 print(x[0].shape)
 batchSize = 20
 
-criterion = torch.nn.CrossEntropyLoss()
 net = csim.FirstNet()
-
-optimizer = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
-
-for epoch in range(40):
-
-  running_loss = 0
-  for i in range(0, len(x) - batchSize, batchSize):
-    inputs = torch.from_numpy(x[i:i+batchSize]).float()
-    labels = torch.from_numpy(y[i:i+batchSize])
-    optimizer.zero_grad()
-
-        # forward + backward + optimize
-    outputs = net(inputs)
-    # print(outputs)
-    # print(labels)
-    # exit()
-    loss = criterion(outputs, labels)
-    loss.backward()
-    optimizer.step()
-
-    # print statistics
-    running_loss += loss.item()
-    # if i % 2000 == 1999:    # print every 2000 mini-batches
-    print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.9f}')
-    running_loss = 0.0
-
-
-print('Finished Training')
-
-
 PATH = './my_first.pth'
-torch.save(net.state_dict(), PATH)
+net.load_state_dict(torch.load(PATH))
+
+correct = 0
+total = 0
+# since we're not training, we don't need to calculate the gradients for our outputs
+with torch.no_grad():
+    for i in range(0, len(x) - batchSize, batchSize):
+        inputs = torch.from_numpy(x[i:i+batchSize]).float()
+        labels = torch.from_numpy(y[i:i+batchSize])
+        # calculate outputs by running images through the network
+        outputs = net(inputs)
+        # the class with the highest energy is what we choose as prediction
+        _, predicted = torch.max(outputs.data, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+
+print(f'Accuracy of the network on the 10000 test inputs: {100 * correct // total} %')
+
