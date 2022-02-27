@@ -45,14 +45,14 @@ def shuffle_in_unison(a,b):
 x,y = shuffle_in_unison(x,y)
 print(y.shape, x.shape)
 print(x[0].shape)
-batchSize = 20
+batchSize = 10
 
 criterion = torch.nn.CrossEntropyLoss()
 net = csim.FirstNet()
 
 optimizer = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
-for epoch in range(40):
+for epoch in range(3):
 
   running_loss = 0
   for i in range(0, len(x) - batchSize, batchSize):
