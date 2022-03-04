@@ -9,7 +9,7 @@ import numpy as np
 import torch
 
 categories = ['air', 'bottle']
-dirpath = './csi_data/use_in_paper/2_objects/test'
+dirpath = './csi_data/new2022/new20mhztest/test'
 frameHeight = 50
 y = None
 x = None

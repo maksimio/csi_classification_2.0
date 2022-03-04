@@ -9,7 +9,7 @@ import numpy as np
 import torch
 
 categories = ['air', 'bottle']
-dirpath = './csi_data/use_in_paper/2_objects/train'
+dirpath = './csi_data/new2022/new40mhztest/train'
 frameHeight = 50
 y = None
 x = None
@@ -52,7 +52,7 @@ net = csim.FirstNet()
 
 optimizer = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
-for epoch in range(3):
+for epoch in range(10):
 
   running_loss = 0
   for i in range(0, len(x) - batchSize, batchSize):
