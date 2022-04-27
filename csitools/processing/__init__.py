@@ -21,9 +21,10 @@ def extractAm(csi: np.ndarray) -> np.ndarray:
   return np.abs(csi)
 
 def extractPh(csi: np.ndarray) -> np.ndarray:
-  axis = np.argwhere(np.array(csi.shape) == 56)[0][0]
+  axis = np.argwhere((np.array(csi.shape) == 56) | (np.array(csi.shape) == 114))[0][0]
   ph = np.unwrap(np.angle(csi), axis=axis)
-  return csiread.utils.calib(ph, k=csiread.utils.scidx(20, 1), axis=axis)
+  return np.angle(csi)
+  # return csiread.utils.calib(ph, k=csiread.utils.scidx(40, 1), axis=axis)
 
 def down(csi: np.ndarray) -> np.ndarray:
   return csi - csi.min()
